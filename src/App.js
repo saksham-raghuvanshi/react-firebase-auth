@@ -8,11 +8,11 @@ function App() {
   return (
     <div className="App">
       <Switch>
-        <PublicRoute>
+        <PublicRoute path="/signin">
           <SignIn />
         </PublicRoute>
 
-        <PrivateRoute>
+        <PrivateRoute path="/">
           <Home />
         </PrivateRoute>
       </Switch>
