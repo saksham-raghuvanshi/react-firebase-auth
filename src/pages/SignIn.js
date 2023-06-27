@@ -1,23 +1,32 @@
 import React from "react";
 import firebase from "firebase/compat/app";
-import { Container, Grid, Panel, Row, Col, Button, Alert } from "rsuite";
+import { Container, Grid, Panel, Row, Col, Button } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import FacebookOfficialIcon from "@rsuite/icons/legacy/FacebookOfficial";
 import GooglePlusCircleIcon from "@rsuite/icons/legacy/GooglePlusCircle";
+import { auth, database } from "../firebase";
 const SignIn = () => {
   const Siginwithprovider = async (provider) => {
     try {
+      const { additionalUserInfo, user } = await auth.signInWithPopup(provider);
+      if (additionalUserInfo.isNewUser) {
+        await database.ref(`/profile${user.uid}`).set({
+          name: user.displayName,
+          createdAt: firebase.database.ServerValue.TIMESTAMP,
+        });
+      }
+      console.log("Sigin");
     } catch (error) {
-      Alert.error(error.message, 4000);
+      console.log(error.message, 4000);
     }
   };
 
   const onSignwithFacebook = () => {
-    Siginwithprovider();
+    Siginwithprovider(new firebase.auth.FacebookAuthProvider());
   };
 
   const onSignwithGoogle = () => {
-    Siginwithprovider();
+    Siginwithprovider(new firebase.auth.GoogleAuthProvider());
   };
   return (
     <div>
